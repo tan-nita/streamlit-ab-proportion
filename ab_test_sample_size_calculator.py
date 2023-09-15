@@ -14,15 +14,15 @@ def main():
     st.title("AB Test Sample Size for Proportions")
 
     # Define input fields in the sidebar
-    st.sidebar.header("Input Parameters")
+    st.sidebar.header("Input Your Parameters")
     test_name = st.sidebar.text_input("Test Name", 'Some Test on % Submit to Confirm Uplift')
     daily_traffic = st.sidebar.number_input("Daily Traffic (Total)", min_value=1, value=7300)
     p1 = st.sidebar.number_input("Control Group CR (History)", min_value=0.0, max_value=1.0, step=0.01, value=0.10)
-    uplift = st.sidebar.number_input("Test CR Uplift (Expected)", min_value=0.0, step=0.01, value=0.10)
+    uplift = st.sidebar.number_input("Test CR Uplift (Expected)", min_value=0.0, step=0.01, value=0.10, format="%f")
     control_share = st.sidebar.number_input("Control Size (%)", min_value=0, max_value=100, step=1, value=50)
     test_share = 100 - control_share  # Calculate test_share based on control_share
-    alpha = st.sidebar.number_input("Alpha", min_value=0.0, max_value=1.0, step=0.01, value=0.05)
-    beta = st.sidebar.number_input("Beta (Power)", min_value=0.0, max_value=1.0, step=0.01, value=0.2)
+    alpha = st.sidebar.number_input("Alpha", min_value=0.0, max_value=1.0, step=0.01, value=0.05, format="%.2f")
+    beta = st.sidebar.number_input("Beta (1-Power)", min_value=0.0, max_value=1.0, step=0.01, value=0.2, format="%.2f")
 
     # Calculate sample sizes and duration
     p2 = p1 * (1 + uplift)
@@ -46,6 +46,7 @@ def main():
         alpha = {alpha * 100:.2f}%
         power = {(1 - beta) * 100:.2f}%
         """
+    st.write(":warning: This is test version. In case of any questions and improvements please contact @tania")
     st.code(summary_text)
 
     sample_sizes_control = []
