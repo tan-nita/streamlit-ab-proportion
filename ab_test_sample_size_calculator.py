@@ -8,6 +8,8 @@ import os
 from datetime import datetime
 import math
 
+
+
 # Define the Streamlit app
 def main():
     # Set the title of the app
@@ -15,14 +17,39 @@ def main():
 
     # Define input fields in the sidebar
     st.sidebar.header("Input Your Parameters")
-    test_name = st.sidebar.text_input("Test Name", 'Some Test on % Submit to Confirm Uplift')
-    daily_traffic = st.sidebar.number_input("Daily Traffic (Total)", min_value=1, value=7300)
-    p1 = st.sidebar.number_input("Control Group CR (History)", min_value=0.0, max_value=1.0, step=0.01, value=0.10)
-    uplift = st.sidebar.number_input("Test CR Uplift (Expected)", min_value=0.0, step=0.01, value=0.10, format="%f")
-    control_share = st.sidebar.number_input("Control Size (%)", min_value=0, max_value=100, step=1, value=50)
+    test_name = st.sidebar.text_input("Put Your Test Name", 'Some Test on % Submit Uplift')
+    daily_traffic = st.sidebar.number_input("Daily Traffic (Total)",
+                                            min_value=1,
+                                            value=7300,
+                                            help='Avg. daily users based on full last 14 days')
+    p1 = st.sidebar.number_input("Control CR (History)",
+                                 min_value=0.01,
+                                 max_value=1.0,
+                                 step=0.01,
+                                 value=0.10,
+                                 help='Avg. Conversion rate value based on full last 14 days (as decimal)')
+    uplift = st.sidebar.number_input("Test CR Uplift (Expected)",
+                                     min_value=0.0,
+                                     step=0.01,
+                                     value=0.10,
+                                     help='Expected Uplift in Test Group (as decimal)')
+    control_share = st.sidebar.number_input("Control Group Share (%)",
+                                            min_value=0,
+                                            max_value=100,
+                                            step=1,
+                                            value=50,
+                                            help=f"""Control Share 50/50, 90/10, 80/20 etc.""")
     test_share = 100 - control_share  # Calculate test_share based on control_share
-    alpha = st.sidebar.number_input("Alpha", min_value=0.0, max_value=1.0, step=0.01, value=0.05, format="%.2f")
-    beta = st.sidebar.number_input("Beta (1-Power)", min_value=0.0, max_value=1.0, step=0.01, value=0.2, format="%.2f")
+    alpha = 1 - st.sidebar.slider("Significance level",
+                                  value=0.95,
+                                  min_value=0.8,
+                                  max_value=0.99,
+                                  help='Most Common - 0.95')
+    beta = 1 - st.sidebar.slider("Power",
+                                 value=0.8,
+                                 min_value=0.5,
+                                 max_value=0.99,
+                                 help='Most Common - 0.8')
 
     # Calculate sample sizes and duration
     p2 = p1 * (1 + uplift)
@@ -52,13 +79,7 @@ def main():
         st.write("""
     Please, calculate the required sample size to upderstand the likelihood of detecting real changes.
     
-    - **Test Name**: Provide a descriptive name for your AB test (Optional).
-    - **Daily Traffic (Total)**: Enter the total daily user count.
-    - **Control Group CR (History)**: Historical conversion rate as a decimal.
-    - **Test CR Uplift (Expected)**: Expected conversion rate improvement as a decimal.
-    - **Control Size (%)**: Percentage of traffic allocated to the control group.
-    - **Alpha**: Significance level (default: 0.05 for 5%).
-    - **Beta (1-Power)**: Power (default: 0.2 for 80%).
+    ** To Be added later**
     """)
 
     st.code(summary_text)
@@ -66,11 +87,14 @@ def main():
     sample_sizes_control = []
     sample_sizes_test = []
     deltas = [0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15]
+    days_durat = []
     for delta in deltas:
         p2=p1*(1+delta)
         sample_size_control, sample_size_test = calculate_sample_size(p1, p2, control_share, test_share, alpha=0.05, beta=0.2)
+        days_d = math.ceil((sample_size_control+ sample_size_test) / daily_traffic)
         sample_sizes_control.append(sample_size_control)
         sample_sizes_test.append(sample_size_test)
+        days_durat.append(days_d)
 
     sum_list = [control + test for control, test in zip(sample_sizes_control, sample_sizes_test)]
     total_list = [math.ceil(total / daily_traffic) for total in sum_list]
@@ -111,6 +135,21 @@ def main():
     )
     figd.update_xaxes(tickformat=".0%")
     st.plotly_chart(figd)
+
+    formatted_deltas = [f"{delta * 100:.0f}%" for delta in deltas]
+    #TABLE
+    data = {
+        'Uplift': formatted_deltas,
+        'Days Duration' : days_durat,
+        'Sample Sizes Control': sample_sizes_control,
+        'Sample Sizes Test': sample_sizes_test
+    }
+    df = pd.DataFrame(data).reset_index(drop=True)
+    #df['Deltas'] = df['Deltas'].str.replace(',', '').astype(int).apply(str) + '%'
+    df['Total Size'] = df['Sample Sizes Control'] + df['Sample Sizes Test']
+
+    if st.checkbox("Show table"):
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
 # Calculate sample size function
 def calculate_sample_size(p1, p2, control_share, test_share, alpha, beta):
