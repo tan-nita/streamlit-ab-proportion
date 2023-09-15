@@ -12,10 +12,15 @@ import math
 
 # Define the Streamlit app
 def main():
+
+    st.set_page_config(
+        page_title="AB Sample Size Proportions"
+    )
     # Set the title of the app
-    st.title("🧪AB Test Sample Size for Proportions")
+    st.title("AB Test Sample Size for Proportions")
 
     # Define input fields in the sidebar
+    st.sidebar.image('https://i.ibb.co/dmzj6dD/capy.png', width=110)
     st.sidebar.header("Input Your Parameters")
     test_name = st.sidebar.text_input("Put Your Test Name", 'Some Test on % Submit Uplift')
     daily_traffic = st.sidebar.number_input("Daily Traffic (Total)",
