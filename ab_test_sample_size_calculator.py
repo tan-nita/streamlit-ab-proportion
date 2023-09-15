@@ -47,6 +47,20 @@ def main():
         power = {(1 - beta) * 100:.2f}%
         """
     st.write(":warning: This is test version. In case of any questions and improvements please contact @tania")
+
+    with st.expander("Short guidance"):
+        st.write("""
+    Please, calculate the required sample size to upderstand the likelihood of detecting real changes.
+    
+    - **Test Name**: Provide a descriptive name for your AB test (Optional).
+    - **Daily Traffic (Total)**: Enter the total daily user count.
+    - **Control Group CR (History)**: Historical conversion rate as a decimal.
+    - **Test CR Uplift (Expected)**: Expected conversion rate improvement as a decimal.
+    - **Control Size (%)**: Percentage of traffic allocated to the control group.
+    - **Alpha**: Significance level (default: 0.05 for 5%).
+    - **Beta (1-Power)**: Power (default: 0.2 for 80%).
+    """)
+
     st.code(summary_text)
 
     sample_sizes_control = []
