@@ -75,12 +75,28 @@ def main():
         """
     st.write(":warning: This is test version. In case of any questions and improvements please contact @tania")
 
-    with st.expander("Short guidance"):
+    with st.expander("Support"):
         st.write("""
-    Please, calculate the required sample size to upderstand the likelihood of detecting real changes.
+    **Please, calculate the required sample size to upderstand the likelihood of detecting real changes.**
     
-    ** To Be added later**
+    **🤔 Why do we use Proportions Test?**  
+    Conversion rate data is typically binary, where each user either converts (1) or does not (0). Proportions tests are well-suited for analyzing binary data as they compare the proportions of successes (conversions) in two groups.
+    
+    **🤔 What is Statistical Significance?**  
+    Statistical significance, in simple terms, means that the results of an experiment (AB test) are unlikely to have occurred purely by chance. It indicates that there is a real and meaningful difference or relationship in the data being analyzed, rather than just random fluctuations.
+    
+    **🤔 What is Power?**  
+    Power, in simple terms, represents the ability of an experiment (AB test) to detect a real effect or difference when it exists. It reflects the likelihood of finding a significant result if there is indeed an effect to be discovered. A study with high power is more likely to correctly identify important findings, while low power increases the risk of missing them.
+    
+    **🤔 What do statistical significance at 5% and power of 80% mean?**  
+    It means that we have a 95% confidence that our results are not due to random chance (5% chance of error), and they have an 80% chance of detecting a real effect if it exists.
+
     """)
+        col1, col2 = st.columns(2)
+        image_url1 = "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*HjIvD5nqW7nPYChncaXV-w.png"
+        image_url2 = "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*EfpUIbPQhI2sb8Zj5g-rPg.png"
+        col1.image(image_url1, use_column_width=True)
+        col2.image(image_url2, use_column_width=True)
 
     st.code(summary_text)
 
