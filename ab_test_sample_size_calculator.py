@@ -13,7 +13,7 @@ import math
 # Define the Streamlit app
 def main():
     # Set the title of the app
-    st.title("AB Test Sample Size for Proportions")
+    st.title("🧪AB Test Sample Size for Proportions")
 
     # Define input fields in the sidebar
     st.sidebar.header("Input Your Parameters")
@@ -28,17 +28,18 @@ def main():
                                  step=0.01,
                                  value=0.10,
                                  help='Avg. Conversion rate value based on full last 14 days (as decimal)')
-    uplift = st.sidebar.number_input("Test CR Uplift (Expected)",
-                                     min_value=0.0,
-                                     step=0.01,
-                                     value=0.10,
-                                     help='Expected Uplift in Test Group (as decimal)')
     control_share = st.sidebar.number_input("Control Group Share (%)",
                                             min_value=0,
                                             max_value=100,
                                             step=1,
                                             value=50,
                                             help=f"""Control Share 50/50, 90/10, 80/20 etc.""")
+    uplift = st.sidebar.slider("🔺Test CR Uplift (Expected)",
+                                     min_value=0.01,
+                                     max_value=0.5,
+                                     step=0.01,
+                                     value=0.05,
+                                     help='Expected Uplift in Test Group (as decimal)')
     test_share = 100 - control_share  # Calculate test_share based on control_share
     alpha = 1 - st.sidebar.slider("Significance level",
                                   value=0.95,
@@ -77,7 +78,7 @@ def main():
 
     with st.expander("Support"):
         st.write("""
-    **Please, calculate the required sample size to upderstand the likelihood of detecting real changes.**
+    **Please, calculate the required sample size to uтderstand the likelihood of detecting real changes.**
     
     **🤔 Why do we use Proportions Test?**  
     Conversion rate data is typically binary, where each user either converts (1) or does not (0). Proportions tests are well-suited for analyzing binary data as they compare the proportions of successes (conversions) in two groups.
