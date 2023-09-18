@@ -83,7 +83,7 @@ def main():
 
     with st.expander("Support"):
         st.write("""
-    **Please, calculate the required sample size to uтderstand the likelihood of detecting real changes.**
+    **Please, calculate the required sample size to understand the likelihood of detecting real changes.**
     
     **🤔 Why do we use Proportions Test?**  
     Conversion rate data is typically binary, where each user either converts (1) or does not (0). Proportions tests are well-suited for analyzing binary data as they compare the proportions of successes (conversions) in two groups.
@@ -103,6 +103,13 @@ def main():
         image_url2 = "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*EfpUIbPQhI2sb8Zj5g-rPg.png"
         col1.image(image_url1, use_column_width=True)
         col2.image(image_url2, use_column_width=True)
+
+
+    kpi0, kpi1, kpi2, kpi3 = st.columns(4)
+    kpi0.metric(label="Uplift", value=f"{uplift:.1%}")
+    kpi1.metric(label="Days needed", value=duration)
+    kpi2.metric(label="Total Users", value=f"{sample_size_control + sample_size_test:,}")
+    kpi3.metric(label="Daily Traffic", value=daily_traffic)
 
     st.code(summary_text)
 
